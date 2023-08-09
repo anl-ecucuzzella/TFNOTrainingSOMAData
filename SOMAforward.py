@@ -16,7 +16,7 @@ def run(rank, world_size, args):
     ddp_setup(rank, world_size)
 
     net = TFNO3d(n_modes_height = 4, n_modes_width = 4, n_modes_depth = 4, in_channels = 17, out_channels = 16, hidden_channels = 16, projection_channels = 32, factorization = 'tucker', rank = 0.42)
-    net.load_state_dict(torch.load("model_saved_ep_110"))
+    #net.load_state_dict(torch.load("model_saved_ep_110"))
     trainer = Trainer(net=net, 
                       optimizer_name='Adam', 
                       loss_name='L2',
