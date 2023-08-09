@@ -15,11 +15,6 @@ from deep_adjoint.train.trainer import Trainer, ddp_setup, mp, destroy_process_g
 def run(rank, world_size, args):
     ddp_setup(rank, world_size)
 
-    # if torch.cuda.is_available():
-    #     device = torch.device("cuda")  # Use CUDA device
-    # else:
-    #     device = torch.device("cpu")
-    #net = FNO3d(n_modes_height = 4, n_modes_width = 4, n_modes_depth = 4, in_channels = 17, out_channels = 16, hidden_channels = 16, projection_channels = 32, rank = 0.42)
     net = TFNO3d(n_modes_height = 4, n_modes_width = 4, n_modes_depth = 4, in_channels = 17, out_channels = 16, hidden_channels = 16, projection_channels = 32, factorization = 'tucker', rank = 0.42)
     net.load_state_dict(torch.load("model_saved_ep_110"))
     trainer = Trainer(net=net, 
@@ -62,9 +57,6 @@ if __name__ == "__main__":
 
     world_size = torch.cuda.device_count()
     if args.train == 'True':
-        if os.path.exists("./checkpoints/2023-08-07_test/"):
-            shutil.rmtree("./checkpoints/2023-08-07_test/")
-            print("removed folder")
         mp.spawn(run, args=(world_size, args), nprocs=world_size)
     else:
         run(0, 1, args)
